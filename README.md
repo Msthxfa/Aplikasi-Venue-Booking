@@ -43,4 +43,4 @@ javac --release 8 -encoding UTF-8 -sourcepath src -d out src/venuebooking/Main.j
 java -cp out venuebooking.Main
 ```
 
-Saat dijalankan pertama kali, aplikasi otomatis membuat `data/venues.csv` berisi 5 data ruangan awal dan `data/bookings.csv`.
+Saat dijalankan pertama kali, aplikasi otomatis membuat `data/venues.csv` (kosong, ruangan dapat ditambahkan melalui tab **Katalog Ruangan**) dan `data/bookings.csv`.

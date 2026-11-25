@@ -32,9 +32,8 @@ public class VenueRepository {
             if (filePath.getParent() != null) {
                 Files.createDirectories(filePath.getParent());
             }
-            if (!Files.exists(filePath) || Files.size(filePath) == 0) {
-                seedDefaults();
-                saveAll();
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);
                 return;
             }
             List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
@@ -44,31 +43,9 @@ public class VenueRepository {
                     venues.add(parseVenue(trimmed));
                 }
             }
-            if (venues.isEmpty()) {
-                seedDefaults();
-                saveAll();
-            }
         } catch (IOException e) {
             throw new IllegalStateException("Gagal membaca data ruangan: " + e.getMessage(), e);
         }
-    }
-
-    private void seedDefaults() {
-        venues.add(new Auditorium("AUD-01", "Auditorium Utama Graha", 300, 750000,
-                "Panggung, Sound System, Proyektor, AC Sentral",
-                "assets/images/auditorium.png", true, Auditorium.DEFAULT_SOUND_FEE));
-        venues.add(new HallRoom("HAL-01", "Aula Serbaguna Melati", 120, 400000,
-                "Kursi Lipat, Mic Wireless, Proyektor, AC",
-                "assets/images/hall.png", true));
-        venues.add(new HallRoom("HAL-02", "Ruang Seminar Cendana", 80, 300000,
-                "Podium, Layar Proyektor, Sound, Wi-Fi",
-                "assets/images/hall.png", true));
-        venues.add(new MeetingRoom("MTG-01", "Ruang Rapat Eksekutif A", 20, 150000,
-                "Smart TV, Whiteboard, Wi-Fi, AC",
-                "assets/images/meeting_room.png", true));
-        venues.add(new MeetingRoom("MTG-02", "Ruang Diskusi B", 10, 90000,
-                "Proyektor, Whiteboard, AC",
-                "assets/images/meeting_room.png", true));
     }
 
     private Venue parseVenue(String line) {
@@ -124,6 +101,14 @@ public class VenueRepository {
     public void addVenue(Venue venue) {
         venues.add(venue);
         saveAll();
+    }
+
+    public boolean removeVenue(String id) {
+        boolean removed = venues.removeIf(v -> v.getId().equalsIgnoreCase(id));
+        if (removed) {
+            saveAll();
+        }
+        return removed;
     }
 
     public String generateNextId(String prefix) {

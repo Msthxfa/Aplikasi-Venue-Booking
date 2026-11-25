@@ -51,6 +51,7 @@ public class VenueCatalogPanel extends JPanel {
 
         add(new JScrollPane(table), BorderLayout.CENTER);
         add(createPreviewPanel(), BorderLayout.EAST);
+        add(createActionPanel(), BorderLayout.SOUTH);
 
         refreshTable();
     }
@@ -72,16 +73,23 @@ public class VenueCatalogPanel extends JPanel {
         infoPanel.add(pricingLabel);
         panel.add(infoPanel, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 4));
-        JButton toggleButton = new JButton("Ubah Status");
-        JButton addButton = new JButton("Tambah Ruangan");
-        toggleButton.addActionListener(e -> toggleSelectedStatus());
-        addButton.addActionListener(e -> showAddVenueDialog());
-        buttonPanel.add(toggleButton);
-        buttonPanel.add(addButton);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-
         return panel;
+    }
+
+    private JPanel createActionPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
+        JButton addButton = new JButton("Tambah Ruangan");
+        JButton toggleButton = new JButton("Ubah Status");
+        JButton removeButton = new JButton("Hapus Ruangan");
+
+        addButton.addActionListener(e -> showAddVenueDialog());
+        toggleButton.addActionListener(e -> toggleSelectedStatus());
+        removeButton.addActionListener(e -> deleteSelectedVenue());
+
+        buttonPanel.add(addButton);
+        buttonPanel.add(toggleButton);
+        buttonPanel.add(removeButton);
+        return buttonPanel;
     }
 
     public void refreshTable() {
@@ -110,7 +118,8 @@ public class VenueCatalogPanel extends JPanel {
         int row = table.getSelectedRow();
         if (row < 0 || displayedVenues == null || row >= displayedVenues.size()) {
             imageLabel.setIcon(null);
-            imageLabel.setText("Pilih ruangan");
+            imageLabel.setText(displayedVenues == null || displayedVenues.isEmpty()
+                    ? "Belum ada ruangan" : "Pilih ruangan");
             nameLabel.setText("-");
             infoLabel.setText("-");
             facilitiesLabel.setText("-");
@@ -227,5 +236,23 @@ public class VenueCatalogPanel extends JPanel {
         onDataChanged.run();
         JOptionPane.showMessageDialog(this, "Ruangan baru berhasil ditambahkan: " + newVenue.getId(),
                 "Sukses", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void deleteSelectedVenue() {
+        int row = table.getSelectedRow();
+        if (row < 0 || displayedVenues == null || row >= displayedVenues.size()) {
+            JOptionPane.showMessageDialog(this, "Pilih ruangan pada tabel terlebih dahulu.",
+                    "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        Venue venue = displayedVenues.get(row);
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Hapus ruangan " + venue.getName() + " (" + venue.getId() + ")?",
+                "Konfirmasi Hapus Ruangan", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            venueRepository.removeVenue(venue.getId());
+            refreshTable();
+            onDataChanged.run();
+        }
     }
 }

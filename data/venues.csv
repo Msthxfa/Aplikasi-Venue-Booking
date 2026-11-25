@@ -1,5 +1,0 @@
-AUDITORIUM|AUD-01|Auditorium Utama Graha|300|750000.0|Panggung, Sound System, Proyektor, AC Sentral|assets/images/auditorium.png|true|250000.0
-HALL|HAL-01|Aula Serbaguna Melati|120|400000.0|Kursi Lipat, Mic Wireless, Proyektor, AC|assets/images/hall.png|true|0
-HALL|HAL-02|Ruang Seminar Cendana|80|300000.0|Podium, Layar Proyektor, Sound, Wi-Fi|assets/images/hall.png|true|0
-MEETING|MTG-01|Ruang Rapat Eksekutif A|20|150000.0|Smart TV, Whiteboard, Wi-Fi, AC|assets/images/meeting_room.png|true|0
-MEETING|MTG-02|Ruang Diskusi B|10|90000.0|Proyektor, Whiteboard, AC|assets/images/meeting_room.png|true|0
